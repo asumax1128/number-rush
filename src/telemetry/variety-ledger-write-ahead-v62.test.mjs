@@ -3,7 +3,7 @@ import {createLedgerWriteAheadVarietyV62} from './variety-ledger-write-ahead-v62
 import {LEDGER_KEY_V61} from './variety-safe-recovery-v61.mjs';
 import {PENDING_KEY_V59} from './variety-pending-store-v59.mjs';
 function storage(){const m=new Map();return {m,getItem:k=>m.get(k)??null,setItem:(k,v)=>m.set(k,v),removeItem:k=>m.delete(k)};}
-function locks(){let p=Promise.resolve();return {request:(_name,_opt,fn)=>{const q=p.then(fn);p=q.then(()=>{},()=>{});return q;}};}
+function locks(){const queues=new Map();return {request:(name,_opt,fn)=>{const p=queues.get(name)??Promise.resolve();const q=p.then(fn);queues.set(name,q.then(()=>{},()=>{}));return q;}};}
 const cryptoProvider={getRandomValues:b=>b.fill(7)};
 test('commit stages then ledger-started then history then ledger-saved then ack',async()=>{
  const s=storage(),writes=[],set=s.setItem;s.setItem=(k,v)=>{writes.push([k,v]);set(k,v);};
