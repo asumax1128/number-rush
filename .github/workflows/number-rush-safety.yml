@@ -10,6 +10,10 @@ on:
       - 'tools/verify-vol37.py'
       - 'tools/verify-vol38.cpp'
       - 'tools/verify-vol39.cpp'
+      - 'tools/triple_stats.py'
+      - 'tools/variety_vol40.py'
+      - 'tools/test_vol40.py'
+      - 'tools/audit_vol40.py'
       - '.github/workflows/number-rush-safety.yml'
   pull_request:
     paths:
@@ -21,6 +25,10 @@ on:
       - 'tools/verify-vol37.py'
       - 'tools/verify-vol38.cpp'
       - 'tools/verify-vol39.cpp'
+      - 'tools/triple_stats.py'
+      - 'tools/variety_vol40.py'
+      - 'tools/test_vol40.py'
+      - 'tools/audit_vol40.py'
       - '.github/workflows/number-rush-safety.yml'
   workflow_dispatch:
 jobs:
@@ -53,3 +61,5 @@ jobs:
           /tmp/number-rush-verify39 0 128 0 46656 | tee /tmp/vol39-smoke.log
           grep -q 'pairs=5971968 states=64525248 routes=376233984' /tmp/vol39-smoke.log
           grep -q 'FREE valid=64525248 zero=0' /tmp/vol39-smoke.log
+      - name: Test Vol.40 statistics, tie-breaking and audit failure mode
+        run: python3 -m unittest discover -s tools -p 'test_vol40.py' -v
