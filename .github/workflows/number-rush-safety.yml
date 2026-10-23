@@ -23,6 +23,8 @@ on:
       - 'tools/outcome_history_vol44.py'
       - 'tools/test_outcome_history_vol44.py'
       - 'src/telemetry/**'
+      - 'tools/parse-vol51-partition.py'
+      - 'tools/test_vol51_partition.py'
       - '.github/workflows/number-rush-safety.yml'
   pull_request:
     paths:
@@ -116,3 +118,8 @@ jobs:
 
       - name: Test Vol.50 Variety cross-tab locking and TRIPLE storage UI states
         run: node --test src/telemetry/variety-tab-lock-v50.test.mjs src/telemetry/triple-storage-ui-v50.test.mjs
+
+      - name: Test Vol.51 game adapters and partition coverage
+        run: |
+          node --test src/telemetry/variety-game-adapter-v51.test.mjs src/telemetry/triple-game-ui-adapter-v51.test.mjs
+          python3 -m unittest discover -s tools -p 'test_vol51_partition.py' -v
