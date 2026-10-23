@@ -1,0 +1,43 @@
+name: NUMBER RUSH Vol.52 Single Batch Benchmark (Provisional)
+on:
+  workflow_dispatch:
+jobs:
+  benchmark-batch-zero:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - name: Record setup start and compile verifier
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p results
+          date +%s > results/job-start-epoch.txt
+          /usr/bin/time -f 'compile_elapsed_seconds=%e compile_peak_rss_kb=%M' -o results/compile.time g++ -O3 -std=c++17 -Wall -Wextra tools/verify-vol41.cpp -o /tmp/verify52
+      - name: Benchmark first 24 partitions (0 to 23)
+        shell: bash
+        run: |
+          set -euo pipefail
+          : > results/summary.tsv
+          for ((i=0;i<24;i++)); do
+            b=$((i*243)); e=$((b+243))
+            log="results/partition-$(printf '%03d' "$i").log"
+            /usr/bin/time -f 'elapsed_seconds=%e peak_rss_kb=%M' -o "${log}.timing" /tmp/verify52 "$b" "$e" 0 46656 > "$log"
+            grep -q '^RESULT: no FREE counterexample in tested partition$' "$log"
+            grep -Eq '^FREE valid=[0-9]+ zero=0$' "$log"
+            python3 tools/parse-vol51-partition.py "$log" "$i" >> results/summary.tsv
+          done
+          python3 tools/parse-vol51-partition.py --validate-batch results/summary.tsv 0
+          date +%s > results/compute-end-epoch.txt
+      - name: Summarize observed timings
+        if: always()
+        shell: bash
+        run: |
+          python3 tools/benchmark-vol52-report.py results > results/benchmark-summary.json || true
+          cat results/benchmark-summary.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: vol52-batch-zero-benchmark
+          path: results/
+          retention-days: 14
