@@ -1,0 +1,18 @@
+name: NUMBER RUSH Vol63 Browser E2E
+on:
+  workflow_dispatch:
+jobs:
+  chromium-reload-multitab:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Playwright and Chromium
+        run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+      - name: Run reload and multi-tab Chromium fixture
+        run: node tools/browser-e2e-vol63.mjs
