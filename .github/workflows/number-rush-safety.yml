@@ -88,3 +88,5 @@ jobs:
         run: python3 -m unittest discover -s tools -p 'test_variety_distribution_vol42.py' -v
       - name: Test Vol.42 telemetry exports
         run: node --test src/telemetry/triple-export.test.mjs
+      - name: Test Vol.43 versioned local telemetry storage
+        run: node --test src/telemetry/triple-storage.test.mjs
