@@ -130,3 +130,6 @@ jobs:
 
       - name: Test Vol.53 committed-answer and TRIPLE HUD bridges
         run: node --test src/telemetry/committed-answer-bridge-v53.test.mjs src/telemetry/triple-hud-bridge-v53.test.mjs
+
+      - name: Test Vol.54 finalized answer and TRIPLE HUD mounting
+        run: node --test src/telemetry/variety-adjudication-v54.test.mjs src/telemetry/triple-hud-mount-v54.test.mjs
