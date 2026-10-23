@@ -101,3 +101,6 @@ jobs:
 
       - name: Test Vol.45 restart-safe TRIPLE IDs
         run: node --test src/telemetry/triple-idempotent.test.mjs
+
+      - name: Test Vol.46 browser history persistence and TRIPLE migration
+        run: node --test src/telemetry/variety-history-storage.test.mjs src/telemetry/triple-migrate-v46.test.mjs
