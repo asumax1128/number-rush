@@ -107,3 +107,6 @@ jobs:
 
       - name: Test Vol.47 persistent answer IDs and unified TRIPLE initialization
         run: node --test src/telemetry/variety-history-idempotent-v47.test.mjs src/telemetry/triple-init-v47.test.mjs
+
+      - name: Test Vol.48 Variety migration and TRIPLE cross-tab lock
+        run: node --test src/telemetry/variety-history-migrate-v48.test.mjs src/telemetry/triple-tab-lock-v48.test.mjs
