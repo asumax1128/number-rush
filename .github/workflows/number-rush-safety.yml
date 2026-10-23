@@ -7,6 +7,7 @@ on:
       - 'tools/verify-vol34.cpp'
       - 'tools/verify-vol35.cpp'
       - 'tools/verify-vol36.py'
+      - 'tools/verify-vol37.py'
       - '.github/workflows/number-rush-safety.yml'
   pull_request:
     paths:
@@ -15,6 +16,7 @@ on:
       - 'tools/verify-vol34.cpp'
       - 'tools/verify-vol35.cpp'
       - 'tools/verify-vol36.py'
+      - 'tools/verify-vol37.py'
       - '.github/workflows/number-rush-safety.yml'
   workflow_dispatch:
 jobs:
@@ -35,3 +37,5 @@ jobs:
           done
       - name: Verify BONUS projection
         run: python3 tools/verify-vol36.py
+      - name: Verify DOUBLE sample regression
+        run: python3 tools/verify-vol37.py
