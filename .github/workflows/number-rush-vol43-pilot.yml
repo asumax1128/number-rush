@@ -1,0 +1,63 @@
+name: NUMBER RUSH Vol.43 Actions Pilot
+on:
+  workflow_dispatch:
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      max-parallel: 3
+      matrix:
+        shard: [0, 95, 191]
+    steps:
+      - name: Record job start
+        run: echo "JOB_START=$(date -u +%s)" >> "$GITHUB_ENV"
+      - uses: actions/checkout@v4
+      - name: Compile verifier and measure
+        shell: bash
+        run: |
+          set -euo pipefail
+          begin=$(date -u +%s)
+          g++ -O3 -std=c++17 -Wall -Wextra tools/verify-vol41.cpp -o /tmp/verify41
+          end=$(date -u +%s)
+          echo "COMPILE_SECONDS=$((end-begin))" >> "$GITHUB_ENV"
+      - name: Run one full-queue partition and measure
+        shell: bash
+        run: |
+          set -euo pipefail
+          i=${{ matrix.shard }}
+          start=$((i*243))
+          end=$((start+243))
+          printf -v padded '%03d' "$i"
+          begin=$(date -u +%s)
+          /usr/bin/time -f 'compute_elapsed_seconds=%e peak_rss_kb=%M' -o timing.txt /tmp/verify41 "$start" "$end" 0 46656 | tee "shard-${padded}.log"
+          end_time=$(date -u +%s)
+          echo "COMPUTE_SECONDS=$((end_time-begin))" >> "$GITHUB_ENV"
+          grep -q 'RESULT: no FREE counterexample in tested partition' "shard-${padded}.log"
+          grep -Eq '^FREE valid=[0-9]+ zero=0$' "shard-${padded}.log"
+      - name: Save benchmark breakdown
+        shell: bash
+        run: |
+          set -euo pipefail
+          i=${{ matrix.shard }}
+          printf -v padded '%03d' "$i"
+          now=$(date -u +%s)
+          {
+            echo "shard=$i"
+            echo "job_start_epoch=$JOB_START"
+            echo "job_elapsed_until_report_seconds=$((now-JOB_START))"
+            echo "compile_seconds=$COMPILE_SECONDS"
+            echo "compute_seconds=$COMPUTE_SECONDS"
+            cat timing.txt
+          } | tee "pilot-${padded}.txt"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: vol43-pilot-${{ matrix.shard }}
+          path: |
+            shard-*.log
+            pilot-*.txt
+            timing.txt
+          if-no-files-found: warn
+          retention-days: 14
