@@ -110,3 +110,6 @@ jobs:
 
       - name: Test Vol.48 Variety migration and TRIPLE cross-tab lock
         run: node --test src/telemetry/variety-history-migrate-v48.test.mjs src/telemetry/triple-tab-lock-v48.test.mjs
+
+      - name: Test Vol.49 Variety boot migration and locked TRIPLE runtime
+        run: node --test src/telemetry/variety-init-v49.test.mjs src/telemetry/triple-runtime-v49.test.mjs
