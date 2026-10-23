@@ -25,3 +25,15 @@ test('write failure leaves v1 untouched',()=>{
  assert.equal(migrateVarietyHistoryV1ToV2(x).status,'write-failed');
  assert.equal(s.getItem(VARIETY_HISTORY_KEY),raw);
 });
+
+test('migrated counts remain usable after restart and next answer',async()=>{
+ const {IdempotentTargetHistory}=await import('./variety-history-idempotent-v47.mjs');
+ const s=memory();s.setItem(VARIETY_HISTORY_KEY,JSON.stringify({schemaVersion:1,counts:[2,3,2]}));
+ assert.equal(migrateVarietyHistoryV1ToV2(s).status,'migrated');
+ const a=new IdempotentTargetHistory(s).restore();
+ assert.deepEqual(a.snapshot(),[2,3,2]);
+ assert.equal(a.record({answerId:'s_a1',outcome:'TARGET_CLEAR',consumedTileCount:4}).recorded,true);
+ const b=new IdempotentTargetHistory(s).restore();
+ assert.deepEqual(b.snapshot(),[2,3,2,4]);
+ assert.equal(b.record({answerId:'s_a1',outcome:'TARGET_CLEAR',consumedTileCount:4}).recorded,false);
+});
