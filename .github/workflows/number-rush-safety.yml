@@ -173,3 +173,6 @@ jobs:
 
       - name: Test Vol.63 repeated REFRESH safety model
         run: node --test src/safety/safety-refresh-repeat-v63.test.mjs
+
+      - name: Test Vol.65 optimized repeated REFRESH against Vol.63 oracle
+        run: node --test src/safety/safety-refresh-optimized-v65.test.mjs
