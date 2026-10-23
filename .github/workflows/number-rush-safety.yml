@@ -9,6 +9,7 @@ on:
       - 'tools/verify-vol36.py'
       - 'tools/verify-vol37.py'
       - 'tools/verify-vol38.cpp'
+      - 'tools/verify-vol39.cpp'
       - '.github/workflows/number-rush-safety.yml'
   pull_request:
     paths:
@@ -19,6 +20,7 @@ on:
       - 'tools/verify-vol36.py'
       - 'tools/verify-vol37.py'
       - 'tools/verify-vol38.cpp'
+      - 'tools/verify-vol39.cpp'
       - '.github/workflows/number-rush-safety.yml'
   workflow_dispatch:
 jobs:
@@ -45,3 +47,9 @@ jobs:
         run: python3 tools/verify-vol36.py
       - name: Verify DOUBLE sample regression
         run: python3 tools/verify-vol37.py
+      - name: Smoke-check Vol.39 DOUBLE partition (not full G4)
+        run: |
+          g++ -O3 -std=c++17 -Wall -Wextra tools/verify-vol39.cpp -o /tmp/number-rush-verify39
+          /tmp/number-rush-verify39 0 128 0 46656 | tee /tmp/vol39-smoke.log
+          grep -q 'pairs=5971968 states=64525248 routes=376233984' /tmp/vol39-smoke.log
+          grep -q 'FREE valid=64525248 zero=0' /tmp/vol39-smoke.log
