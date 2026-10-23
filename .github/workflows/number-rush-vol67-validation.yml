@@ -1,0 +1,44 @@
+name: NUMBER RUSH Vol67 G3 and IndexedDB Validation
+on:
+  workflow_dispatch:
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Compare Vol63 and Vol65 under identical constraints
+        run: node tools/benchmark-refresh-compare-v66.mjs > g3-v67.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: g3-vol67-results
+          path: g3-v67.json
+  chromium-faults:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Playwright Chromium
+        run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+      - name: Test Vol65 fault injection
+        run: node tools/browser-idb-fault-v65.mjs
+      - name: Test Vol66 atomic TRIPLE cross-tab behavior
+        run: node tools/browser-triple-atomic-v66.mjs
+  node-regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test Vol67 atomic question-commit adapter
+        run: node --test src/telemetry/question-commit-v56.test.mjs src/telemetry/question-commit-atomic-v67.test.mjs
