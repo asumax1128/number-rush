@@ -22,7 +22,7 @@ export function createGameQuestionTelemetryAdapter({committer,onWarning=()=>{}})
  };
  return Object.freeze({onQuestionFinalized});
 }
-export function initializeGameQuestionTelemetry({hud,storage,locks,cryptoProvider,onWarning=()=>{},questionLedger=null}){
- const committer=createQuestionCommitter({hud,storage,locks,cryptoProvider,onWarning,questionLedger});
+export function initializeGameQuestionTelemetry({hud,storage,locks,cryptoProvider,onWarning=()=>{},questionLedger=null,atomicTripleStore=null}){
+ const committer=createQuestionCommitter({hud,storage,locks,cryptoProvider,onWarning,questionLedger,atomicTripleStore});
  return {...createGameQuestionTelemetryAdapter({committer,onWarning}),ready:committer.ready,getView:committer.getView,element:committer.element};
 }
