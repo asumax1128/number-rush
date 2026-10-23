@@ -25,6 +25,8 @@ on:
       - 'tools/outcome_history_vol44.py'
       - 'tools/test_outcome_history_vol44.py'
       - 'src/telemetry/**'
+      - 'src/safety/**'
+      - 'src/safety/**'
       - 'tools/parse-vol51-partition.py'
       - 'tools/test_vol51_partition.py'
       - 'tools/benchmark-vol52-report.py'
@@ -159,3 +161,6 @@ jobs:
 
       - name: Test Vol.59 durable pending WAL and simulated game E2E
         run: node --test src/telemetry/variety-pending-store-v59.test.mjs src/telemetry/game-simulation-e2e-v59.test.mjs
+
+      - name: Test Vol.60 safe mission continuation and write-ahead commit
+        run: node --test src/safety/safety-consecutive-missions-v60.test.mjs src/telemetry/variety-write-ahead-v60.test.mjs
