@@ -1,0 +1,7 @@
+<!doctype html><html lang="ja"><meta charset="utf-8"><title>Vol66 atomic TRIPLE test</title><output id="ready">loading</output>
+<script type="module">
+import {createAtomicTripleStoreV66} from '../../src/telemetry/triple-atomic-store-v66.mjs';
+const store=await createAtomicTripleStoreV66({indexedDB,newQuestionId:()=> 'q_'+crypto.randomUUID().replaceAll('-','')});
+window.vol66={store,question:{questionKey:'shared_question_v66',finalized:true,difficulty:'NORMAL',selectedMission:'TRIPLE',safeMissions:['FREE','TRIPLE'],missionClearSolutions:3,targetTileCountKinds:2}};
+document.querySelector('#ready').textContent='ready';
+</script></html>
