@@ -144,3 +144,6 @@ jobs:
         run: |
           node --test src/telemetry/answer-commit-gate-v56.test.mjs src/telemetry/question-commit-v56.test.mjs
           python3 -m unittest discover -s tools -p 'test_preflight_vol56.py' -v
+
+      - name: Test Vol.57 bounded Variety retry queue
+        run: node --test src/telemetry/variety-retry-queue-v57.test.mjs
