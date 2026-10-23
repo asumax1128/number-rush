@@ -113,3 +113,6 @@ jobs:
 
       - name: Test Vol.49 Variety boot migration and locked TRIPLE runtime
         run: node --test src/telemetry/variety-init-v49.test.mjs src/telemetry/triple-runtime-v49.test.mjs
+
+      - name: Test Vol.50 Variety cross-tab locking and TRIPLE storage UI states
+        run: node --test src/telemetry/variety-tab-lock-v50.test.mjs src/telemetry/triple-storage-ui-v50.test.mjs
