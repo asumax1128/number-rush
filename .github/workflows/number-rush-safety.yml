@@ -14,6 +14,10 @@ on:
       - 'tools/variety_vol40.py'
       - 'tools/test_vol40.py'
       - 'tools/audit_vol40.py'
+      - 'tools/verify-vol41.cpp'
+      - 'tools/tile_count_history_vol41.py'
+      - 'tools/test_tile_count_history_vol41.py'
+      - 'src/telemetry/**'
       - '.github/workflows/number-rush-safety.yml'
   pull_request:
     paths:
@@ -29,6 +33,10 @@ on:
       - 'tools/variety_vol40.py'
       - 'tools/test_vol40.py'
       - 'tools/audit_vol40.py'
+      - 'tools/verify-vol41.cpp'
+      - 'tools/tile_count_history_vol41.py'
+      - 'tools/test_tile_count_history_vol41.py'
+      - 'src/telemetry/**'
       - '.github/workflows/number-rush-safety.yml'
   workflow_dispatch:
 jobs:
@@ -63,3 +71,13 @@ jobs:
           grep -q 'FREE valid=64525248 zero=0' /tmp/vol39-smoke.log
       - name: Test Vol.40 statistics, tie-breaking and audit failure mode
         run: python3 -m unittest discover -s tools -p 'test_vol40.py' -v
+      - name: Cross-check optimized Vol.41 with Vol.39 partition
+        run: |
+          g++ -O3 -std=c++17 -Wall -Wextra tools/verify-vol41.cpp -o /tmp/number-rush-verify41
+          /tmp/number-rush-verify41 0 128 0 46656 > /tmp/vol41.log
+          /tmp/number-rush-verify39 0 128 0 46656 > /tmp/vol39-reference.log
+          diff -u /tmp/vol39-reference.log /tmp/vol41.log
+      - name: Test 20-question tile-count history
+        run: python3 -m unittest discover -s tools -p 'test_tile_count_history_vol41.py' -v
+      - name: Test TRIPLE telemetry adapter
+        run: node --test src/telemetry/triple-telemetry.test.mjs
