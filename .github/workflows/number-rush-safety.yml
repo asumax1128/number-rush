@@ -20,6 +20,8 @@ on:
       - 'tools/test_variety_distribution_vol42.py'
       - 'tools/tile_count_history_vol41.py'
       - 'tools/test_tile_count_history_vol41.py'
+      - 'tools/outcome_history_vol44.py'
+      - 'tools/test_outcome_history_vol44.py'
       - 'src/telemetry/**'
       - '.github/workflows/number-rush-safety.yml'
   pull_request:
@@ -39,6 +41,8 @@ on:
       - 'tools/verify-vol41.cpp'
       - 'tools/tile_count_history_vol41.py'
       - 'tools/test_tile_count_history_vol41.py'
+      - 'tools/outcome_history_vol44.py'
+      - 'tools/test_outcome_history_vol44.py'
       - 'src/telemetry/**'
       - '.github/workflows/number-rush-safety.yml'
   workflow_dispatch:
@@ -90,3 +94,7 @@ jobs:
         run: node --test src/telemetry/triple-export.test.mjs
       - name: Test Vol.43 versioned local telemetry storage
         run: node --test src/telemetry/triple-storage.test.mjs
+      - name: Test Vol.44 outcome-aware history
+        run: python3 -m unittest discover -s tools -p 'test_outcome_history_vol44.py' -v
+      - name: Test Vol.44 TRIPLE autosave and recovery
+        run: node --test src/telemetry/triple-autosave.test.mjs
