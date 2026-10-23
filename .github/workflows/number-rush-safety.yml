@@ -5,28 +5,29 @@ on:
       - 'tools/verify-vol32.cpp'
       - 'tools/verify-vol33.cpp'
       - 'tools/verify-vol34.cpp'
+      - 'tools/verify-vol35.cpp'
       - '.github/workflows/number-rush-safety.yml'
   pull_request:
     paths:
       - 'tools/verify-vol32.cpp'
       - 'tools/verify-vol33.cpp'
       - 'tools/verify-vol34.cpp'
+      - 'tools/verify-vol35.cpp'
       - '.github/workflows/number-rush-safety.yml'
   workflow_dispatch:
 jobs:
   exhaustive-five-missions:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - name: Compile exhaustive verifiers
         run: |
-          g++ -O3 -std=c++17 -Wall -Wextra tools/verify-vol32.cpp -o /tmp/number-rush-verify32
-          g++ -O3 -std=c++17 -Wall -Wextra tools/verify-vol33.cpp -o /tmp/number-rush-verify33
-          g++ -O3 -std=c++17 -Wall -Wextra tools/verify-vol34.cpp -o /tmp/number-rush-verify34
-      - name: Run Vol.32 FREE PAIR regression
-        run: /tmp/number-rush-verify32
-      - name: Run Vol.33 FREE PAIR TRIPLE regression
-        run: /tmp/number-rush-verify33
-      - name: Run Vol.34 all five missions regression
-        run: /tmp/number-rush-verify34
+          for v in 32 33 34 35; do
+            g++ -O3 -std=c++17 -Wall -Wextra tools/verify-vol${v}.cpp -o /tmp/number-rush-verify${v}
+          done
+      - name: Run safety regressions
+        run: |
+          for v in 32 33 34 35; do
+            /tmp/number-rush-verify${v}
+          done
