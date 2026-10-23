@@ -15,6 +15,9 @@ on:
       - 'tools/test_vol40.py'
       - 'tools/audit_vol40.py'
       - 'tools/verify-vol41.cpp'
+      - 'tools/benchmark_vol42.py'
+      - 'tools/variety_distribution_vol42.py'
+      - 'tools/test_variety_distribution_vol42.py'
       - 'tools/tile_count_history_vol41.py'
       - 'tools/test_tile_count_history_vol41.py'
       - 'src/telemetry/**'
@@ -81,3 +84,7 @@ jobs:
         run: python3 -m unittest discover -s tools -p 'test_tile_count_history_vol41.py' -v
       - name: Test TRIPLE telemetry adapter
         run: node --test src/telemetry/triple-telemetry.test.mjs
+      - name: Test Vol.42 distribution-adjusted variety
+        run: python3 -m unittest discover -s tools -p 'test_variety_distribution_vol42.py' -v
+      - name: Test Vol.42 telemetry exports
+        run: node --test src/telemetry/triple-export.test.mjs
