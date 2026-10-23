@@ -5,7 +5,7 @@
  */
 import {createAnswerIdFactory} from './answer-id-v52.mjs';
 import {mountTripleStatusInGame} from './triple-hud-mount-v54.mjs';
-export function createQuestionCommitter({hud,storage,locks,cryptoProvider,onWarning=()=>{},maxSettled=512}){
+export function createQuestionCommitter({hud,storage,locks,cryptoProvider,onWarning=()=>{},maxSettled=512,questionLedger=null}){
  if(!Number.isInteger(maxSettled)||maxSettled<1)throw new RangeError('maxSettled');
  const ids=createAnswerIdFactory({cryptoProvider});
  const ui=mountTripleStatusInGame({hud,storage,locks,onWarning});
@@ -24,7 +24,16 @@ export function createQuestionCommitter({hud,storage,locks,cryptoProvider,onWarn
    return cached.promise;
   }
   const questionId='q_'+ids.next().slice(2);
-  const promise=Promise.resolve().then(async()=>({questionId,result:await ui.commitQuestion(questionId,event)}));
+  const promise=Promise.resolve().then(async()=>{
+   if(!questionLedger)return {questionId,result:await ui.commitQuestion(questionId,event)};
+   const reserved=await questionLedger.reserve({questionKey,fingerprint});
+   if(reserved.duplicate){
+    // Reservation proves the ID exists, NOT that telemetry was saved.
+    // Fail closed: never write a second telemetry event for this key.
+    return {questionId:reserved.questionId,result:{saved:false,recorded:false,status:'duplicate-reservation-unverified'}};
+   }
+   return {questionId:reserved.questionId,result:await ui.commitQuestion(reserved.questionId,event)};
+  });
   const entry={fingerprint,promise};
   inFlight.set(questionKey,entry);
   promise.then(()=>{
