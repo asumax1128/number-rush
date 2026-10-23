@@ -104,3 +104,6 @@ jobs:
 
       - name: Test Vol.46 browser history persistence and TRIPLE migration
         run: node --test src/telemetry/variety-history-storage.test.mjs src/telemetry/triple-migrate-v46.test.mjs
+
+      - name: Test Vol.47 persistent answer IDs and unified TRIPLE initialization
+        run: node --test src/telemetry/variety-history-idempotent-v47.test.mjs src/telemetry/triple-init-v47.test.mjs
