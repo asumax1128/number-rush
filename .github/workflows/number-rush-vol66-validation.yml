@@ -1,0 +1,34 @@
+name: NUMBER RUSH Vol66 Benchmark and Atomic TRIPLE
+on:
+  workflow_dispatch:
+jobs:
+  g3-benchmark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Compare G3 verifier versions
+        run: node tools/benchmark-refresh-compare-v66.mjs | tee g3-v66.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: g3-benchmark-v66
+          path: g3-v66.json
+  chromium-triple:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Chromium
+        run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+      - name: Re-run Vol65 IndexedDB fault injection
+        run: node tools/browser-idb-fault-v65.mjs
+      - name: Vol66 atomic TRIPLE two-tab E2E
+        run: node tools/browser-triple-atomic-v66.mjs
