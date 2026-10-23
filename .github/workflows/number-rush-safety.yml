@@ -170,3 +170,6 @@ jobs:
 
       - name: Test Vol.62 universal REFRESH and coordinated ledger write-ahead
         run: node --test src/safety/safety-refresh-universal-v62.test.mjs src/telemetry/variety-ledger-write-ahead-v62.test.mjs
+
+      - name: Test Vol.63 repeated REFRESH safety model
+        run: node --test src/safety/safety-refresh-repeat-v63.test.mjs
