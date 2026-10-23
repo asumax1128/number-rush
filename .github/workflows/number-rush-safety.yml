@@ -156,3 +156,6 @@ jobs:
         run: |
           python3 -m unittest discover -s tools -p 'test_fixedpoint_mini_vol58.py' -v
           node --test src/telemetry/triple-question-adapter-v58.test.mjs
+
+      - name: Test Vol.59 durable pending WAL and simulated game E2E
+        run: node --test src/telemetry/variety-pending-store-v59.test.mjs src/telemetry/game-simulation-e2e-v59.test.mjs
