@@ -1,0 +1,21 @@
+name: NUMBER RUSH Safety Verification
+on:
+  push:
+    paths:
+      - 'tools/verify-vol32.cpp'
+      - '.github/workflows/number-rush-safety.yml'
+  pull_request:
+    paths:
+      - 'tools/verify-vol32.cpp'
+      - '.github/workflows/number-rush-safety.yml'
+  workflow_dispatch:
+jobs:
+  exhaustive-free-pair:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile independent exhaustive verifier
+        run: g++ -O3 -std=c++17 -Wall -Wextra tools/verify-vol32.cpp -o /tmp/number-rush-verify
+      - name: Verify all states and regression counts
+        run: /tmp/number-rush-verify
