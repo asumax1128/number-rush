@@ -1,0 +1,20 @@
+name: NUMBER RUSH Vol65 Atomic Storage and TRIPLE Cross-tab E2E
+on:
+  workflow_dispatch:
+jobs:
+  chromium-v65:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Playwright and Chromium
+        run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+      - name: IndexedDB injected failure and restart
+        run: node tools/browser-idb-fault-v65.mjs
+      - name: TRIPLE same-key cross-tab reservation
+        run: node tools/browser-question-key-v65.mjs
