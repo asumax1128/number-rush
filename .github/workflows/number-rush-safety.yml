@@ -98,3 +98,6 @@ jobs:
         run: python3 -m unittest discover -s tools -p 'test_outcome_history_vol44.py' -v
       - name: Test Vol.44 TRIPLE autosave and recovery
         run: node --test src/telemetry/triple-autosave.test.mjs
+
+      - name: Test Vol.45 restart-safe TRIPLE IDs
+        run: node --test src/telemetry/triple-idempotent.test.mjs
