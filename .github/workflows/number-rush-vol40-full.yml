@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Compile verifier
-        run: g++ -O3 -std=c++17 -Wall -Wextra tools/verify-vol39.cpp -o /tmp/verify39
+        run: g++ -O3 -std=c++17 -Wall -Wextra tools/verify-vol41.cpp -o /tmp/verify39
       - name: Exhaustively check assigned boards against all queues
         shell: bash
         run: |
