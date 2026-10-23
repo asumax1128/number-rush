@@ -4,15 +4,17 @@ on:
     paths:
       - 'tools/verify-vol32.cpp'
       - 'tools/verify-vol33.cpp'
+      - 'tools/verify-vol34.cpp'
       - '.github/workflows/number-rush-safety.yml'
   pull_request:
     paths:
       - 'tools/verify-vol32.cpp'
       - 'tools/verify-vol33.cpp'
+      - 'tools/verify-vol34.cpp'
       - '.github/workflows/number-rush-safety.yml'
   workflow_dispatch:
 jobs:
-  exhaustive-free-pair-triple:
+  exhaustive-five-missions:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -21,7 +23,10 @@ jobs:
         run: |
           g++ -O3 -std=c++17 -Wall -Wextra tools/verify-vol32.cpp -o /tmp/number-rush-verify32
           g++ -O3 -std=c++17 -Wall -Wextra tools/verify-vol33.cpp -o /tmp/number-rush-verify33
+          g++ -O3 -std=c++17 -Wall -Wextra tools/verify-vol34.cpp -o /tmp/number-rush-verify34
       - name: Run Vol.32 FREE PAIR regression
         run: /tmp/number-rush-verify32
       - name: Run Vol.33 FREE PAIR TRIPLE regression
         run: /tmp/number-rush-verify33
+      - name: Run Vol.34 all five missions regression
+        run: /tmp/number-rush-verify34
