@@ -1,0 +1,15 @@
+<!doctype html><html lang="ja"><meta charset="utf-8"><title>NUMBER×RUSH Vol.60 Browser E2E Fixture</title>
+<body><main><h1>Vol.60 TRIPLE Browser E2E Fixture</h1><div data-game-hud></div>
+<button id="commit">確定</button><button id="duplicate">重複通知</button><output id="result"></output></main>
+<script type="module">
+import {initializeGameQuestionTelemetry} from '../../src/telemetry/triple-question-adapter-v58.mjs';
+const hud=document.querySelector('[data-game-hud]');
+const output=document.getElementById('result');
+const bridge=initializeGameQuestionTelemetry({hud,storage:localStorage,locks:navigator.locks,cryptoProvider:crypto});
+await bridge.ready;
+const snapshot={questionKey:'fixture_question_1',finalized:true,safetyCertified:true,boardCommitted:true,targetCommitted:true,missionCommitted:true,queueReservationLocked:true,publishedQueue:[1,2,3,1,2],reservedSixth:3,difficulty:'NORMAL',safeMissions:['FREE','TRIPLE'],selectedMission:'TRIPLE',missionClearSolutions:3,targetTileCountKinds:2};
+async function run(){const r=await bridge.onQuestionFinalized(snapshot);output.textContent=JSON.stringify(r);}
+document.getElementById('commit').addEventListener('click',run);
+document.getElementById('duplicate').addEventListener('click',run);
+window.numberRushE2E={bridge,snapshot};
+</script></body></html>
