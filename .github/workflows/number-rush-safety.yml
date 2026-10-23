@@ -127,3 +127,6 @@ jobs:
 
       - name: Test Vol.52 answer IDs and TRIPLE DOM renderer
         run: node --test src/telemetry/answer-id-v52.test.mjs src/telemetry/triple-dom-status-v52.test.mjs
+
+      - name: Test Vol.53 committed-answer and TRIPLE HUD bridges
+        run: node --test src/telemetry/committed-answer-bridge-v53.test.mjs src/telemetry/triple-hud-bridge-v53.test.mjs
