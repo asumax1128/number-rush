@@ -6,6 +6,7 @@ on:
       - 'tools/verify-vol33.cpp'
       - 'tools/verify-vol34.cpp'
       - 'tools/verify-vol35.cpp'
+      - 'tools/verify-vol36.py'
       - '.github/workflows/number-rush-safety.yml'
   pull_request:
     paths:
@@ -13,6 +14,7 @@ on:
       - 'tools/verify-vol33.cpp'
       - 'tools/verify-vol34.cpp'
       - 'tools/verify-vol35.cpp'
+      - 'tools/verify-vol36.py'
       - '.github/workflows/number-rush-safety.yml'
   workflow_dispatch:
 jobs:
@@ -31,3 +33,5 @@ jobs:
           for v in 32 33 34 35; do
             /tmp/number-rush-verify${v}
           done
+      - name: Verify BONUS projection
+        run: python3 tools/verify-vol36.py
