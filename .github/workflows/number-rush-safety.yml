@@ -167,3 +167,6 @@ jobs:
 
       - name: Test Vol.61 G3 refresh and conservative cross-tab recovery
         run: node --test src/safety/safety-refresh-g3-v61.test.mjs src/telemetry/variety-safe-recovery-v61.test.mjs
+
+      - name: Test Vol.62 universal REFRESH and coordinated ledger write-ahead
+        run: node --test src/safety/safety-refresh-universal-v62.test.mjs src/telemetry/variety-ledger-write-ahead-v62.test.mjs
