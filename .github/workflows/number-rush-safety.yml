@@ -26,6 +26,9 @@ on:
       - 'tools/parse-vol51-partition.py'
       - 'tools/test_vol51_partition.py'
       - 'tools/benchmark-vol52-report.py'
+      - 'tools/preflight_vol56.py'
+      - 'tools/test_preflight_vol56.py'
+      - '.github/workflows/number-rush-vol51-batch.yml'
       - '.github/workflows/number-rush-safety.yml'
   pull_request:
     paths:
@@ -136,3 +139,8 @@ jobs:
 
       - name: Test Vol.55 TRIPLE saved-event and HUD integration
         run: node --test src/telemetry/triple-hud-integration-v55.test.mjs
+
+      - name: Test Vol.56 answer/question idempotency and G4 batch preflight
+        run: |
+          node --test src/telemetry/answer-commit-gate-v56.test.mjs src/telemetry/question-commit-v56.test.mjs
+          python3 -m unittest discover -s tools -p 'test_preflight_vol56.py' -v
