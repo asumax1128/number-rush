@@ -8,6 +8,7 @@ on:
       - 'tools/verify-vol35.cpp'
       - 'tools/verify-vol36.py'
       - 'tools/verify-vol37.py'
+      - 'tools/verify-vol38.cpp'
       - '.github/workflows/number-rush-safety.yml'
   pull_request:
     paths:
@@ -17,6 +18,7 @@ on:
       - 'tools/verify-vol35.cpp'
       - 'tools/verify-vol36.py'
       - 'tools/verify-vol37.py'
+      - 'tools/verify-vol38.cpp'
       - '.github/workflows/number-rush-safety.yml'
   workflow_dispatch:
 jobs:
@@ -35,6 +37,10 @@ jobs:
           for v in 32 33 34 35; do
             /tmp/number-rush-verify${v}
           done
+      - name: Compile and verify Vol.38 DOUBLE model
+        run: |
+          g++ -O3 -std=c++17 -Wall -Wextra tools/verify-vol38.cpp -o /tmp/number-rush-verify38
+          /tmp/number-rush-verify38
       - name: Verify BONUS projection
         run: python3 tools/verify-vol36.py
       - name: Verify DOUBLE sample regression
