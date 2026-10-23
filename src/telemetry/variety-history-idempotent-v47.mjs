@@ -14,9 +14,9 @@ function parse(raw){
  if(x.legacyCounts!==undefined&&(!Array.isArray(x.legacyCounts)||x.legacyCounts.length>MAX||x.legacyCounts.some(n=>!Number.isInteger(n)||n<1||n>6)))throw Error('invalid legacy counts');
  const seen=new Set();
  const entries=x.entries.map(e=>{
-  if(!e||typeof e.id!=='string'||!ID.test(e.id)||seen.has(e.id))throw Error('invalid/duplicate answer ID');
+  if(!e||(e.id!==null&&(typeof e.id!=='string'||!ID.test(e.id)||seen.has(e.id))))throw Error('invalid/duplicate answer ID');
   if(!Number.isInteger(e.count)||e.count<1||e.count>6)throw Error('invalid tile count');
-  seen.add(e.id);return {id:e.id,count:e.count};
+  if(e.id!==null)seen.add(e.id);return {id:e.id,count:e.count};
  });
  const legacy=x.legacyCounts??[];
  return [...legacy.map((count,i)=>({id:null,count})),...entries].slice(-MAX);
