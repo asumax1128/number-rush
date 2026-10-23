@@ -133,3 +133,6 @@ jobs:
 
       - name: Test Vol.54 finalized answer and TRIPLE HUD mounting
         run: node --test src/telemetry/variety-adjudication-v54.test.mjs src/telemetry/triple-hud-mount-v54.test.mjs
+
+      - name: Test Vol.55 TRIPLE saved-event and HUD integration
+        run: node --test src/telemetry/triple-hud-integration-v55.test.mjs
