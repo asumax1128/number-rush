@@ -15,6 +15,8 @@ on:
       - 'tools/test_vol40.py'
       - 'tools/audit_vol40.py'
       - 'tools/verify-vol41.cpp'
+      - 'tools/fixedpoint_mini_vol58.py'
+      - 'tools/test_fixedpoint_mini_vol58.py'
       - 'tools/benchmark_vol42.py'
       - 'tools/variety_distribution_vol42.py'
       - 'tools/test_variety_distribution_vol42.py'
@@ -45,6 +47,8 @@ on:
       - 'tools/test_vol40.py'
       - 'tools/audit_vol40.py'
       - 'tools/verify-vol41.cpp'
+      - 'tools/fixedpoint_mini_vol58.py'
+      - 'tools/test_fixedpoint_mini_vol58.py'
       - 'tools/tile_count_history_vol41.py'
       - 'tools/test_tile_count_history_vol41.py'
       - 'tools/outcome_history_vol44.py'
@@ -147,3 +151,8 @@ jobs:
 
       - name: Test Vol.57 bounded Variety retry queue
         run: node --test src/telemetry/variety-retry-queue-v57.test.mjs
+
+      - name: Test Vol.58 miniature FREE fixed point and question-finalization adapter
+        run: |
+          python3 -m unittest discover -s tools -p 'test_fixedpoint_mini_vol58.py' -v
+          node --test src/telemetry/triple-question-adapter-v58.test.mjs
