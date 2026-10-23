@@ -5,8 +5,9 @@
  */
 import {createAnswerIdFactory} from './answer-id-v52.mjs';
 import {mountTripleStatusInGame} from './triple-hud-mount-v54.mjs';
-export function createQuestionCommitter({hud,storage,locks,cryptoProvider,onWarning=()=>{},maxSettled=512,questionLedger=null}){
+export function createQuestionCommitter({hud,storage,locks,cryptoProvider,onWarning=()=>{},maxSettled=512,questionLedger=null,atomicTripleStore=null}){
  if(!Number.isInteger(maxSettled)||maxSettled<1)throw new RangeError('maxSettled');
+ if(atomicTripleStore&&questionLedger)throw new TypeError('atomicTripleStore and questionLedger are mutually exclusive');
  const ids=createAnswerIdFactory({cryptoProvider});
  const ui=mountTripleStatusInGame({hud,storage,locks,onWarning});
  const inFlight=new Map(),settled=new Map();
@@ -25,6 +26,10 @@ export function createQuestionCommitter({hud,storage,locks,cryptoProvider,onWarn
   }
   const questionId='q_'+ids.next().slice(2);
   const promise=Promise.resolve().then(async()=>{
+   if(atomicTripleStore){
+    const saved=await atomicTripleStore.commit({questionKey,finalized:true,...event});
+    return {questionId:saved.questionId,result:{saved:saved.saved,recorded:!saved.duplicate,duplicate:saved.duplicate,status:saved.duplicate?'already-committed':'atomic-committed'}};
+   }
    if(!questionLedger)return {questionId,result:await ui.commitQuestion(questionId,event)};
    const reserved=await questionLedger.reserve({questionKey,fingerprint});
    if(reserved.duplicate){
