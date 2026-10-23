@@ -10,12 +10,16 @@ function parse(raw){
  if(typeof raw!=='string'||raw.length>4096)throw Error('invalid payload length');
  const x=JSON.parse(raw);
  if(x?.schemaVersion!==2||!Array.isArray(x.entries)||x.entries.length>MAX)throw Error('invalid history schema');
+ if(x.kind!==undefined&&x.kind!=='variety-target-history-migrated')throw Error('invalid kind');
+ if(x.legacyCounts!==undefined&&(!Array.isArray(x.legacyCounts)||x.legacyCounts.length>MAX||x.legacyCounts.some(n=>!Number.isInteger(n)||n<1||n>6)))throw Error('invalid legacy counts');
  const seen=new Set();
- return x.entries.map(e=>{
+ const entries=x.entries.map(e=>{
   if(!e||typeof e.id!=='string'||!ID.test(e.id)||seen.has(e.id))throw Error('invalid/duplicate answer ID');
   if(!Number.isInteger(e.count)||e.count<1||e.count>6)throw Error('invalid tile count');
   seen.add(e.id);return {id:e.id,count:e.count};
  });
+ const legacy=x.legacyCounts??[];
+ return [...legacy.map((count,i)=>({id:null,count})),...entries].slice(-MAX);
 }
 export class IdempotentTargetHistory {
  constructor(storage,{onWarning=()=>{}}={}){
